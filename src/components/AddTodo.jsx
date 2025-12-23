@@ -10,8 +10,13 @@ const AddTodo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (text.trim()) {
-      await dispatch(addTodo(text.trim()));
-      setText('');
+      try {
+        await dispatch(addTodo(text.trim())).unwrap();
+        setText('');
+      } catch (err) {
+        console.error('Failed to add todo:', err);
+        alert('Failed to add todo. Please check console for details.');
+      }
     }
   };
 

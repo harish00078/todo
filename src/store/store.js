@@ -7,13 +7,6 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        // Ignore these action types for Firebase Timestamp
-        ignoredActions: ['todos/addTodo/fulfilled', 'todos/fetchTodos/fulfilled'],
-        // Ignore these field paths in all actions
-        ignoredActionPaths: ['payload.createdAt'],
-        // Ignore these paths in the state
-        ignoredPaths: ['todos.items'],
-      },
+      serializableCheck: false,
     }),
 });

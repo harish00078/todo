@@ -5,12 +5,20 @@ import { Trash2, CheckCircle2, Circle } from 'lucide-react';
 const TodoItem = ({ todo }) => {
   const dispatch = useDispatch();
 
-  const handleToggle = () => {
-    dispatch(toggleTodo(todo));
+  const handleToggle = async () => {
+    try {
+      await dispatch(toggleTodo(todo)).unwrap();
+    } catch (err) {
+      console.error('Failed to toggle todo:', err);
+    }
   };
 
-  const handleDelete = () => {
-    dispatch(deleteTodo(todo.id));
+  const handleDelete = async () => {
+    try {
+      await dispatch(deleteTodo(todo.id)).unwrap();
+    } catch (err) {
+      console.error('Failed to delete todo:', err);
+    }
   };
 
   return (

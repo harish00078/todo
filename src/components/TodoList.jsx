@@ -31,11 +31,18 @@ const TodoList = () => {
 
   if (error) {
     return (
-      <div className="glass-effect rounded-2xl p-8 text-center animate-fade-in">
-        <p className="text-red-400 text-lg">⚠️ {error}</p>
-        <p className="text-white/60 mt-2">
-          Make sure to configure your Firebase credentials in src/firebase.ts
-        </p>
+      <div className="bg-red-500/20 border border-red-500 rounded-2xl p-8 text-center animate-fade-in my-4">
+        <h3 className="text-red-400 text-xl font-bold mb-2">Connection Error</h3>
+        <p className="text-white text-lg mb-4">{error}</p>
+        <div className="text-white/60 text-sm bg-black/30 p-4 rounded text-left font-mono overflow-auto">
+          <p>Possible causes:</p>
+          <ul className="list-disc list-inside mt-2 space-y-1">
+            <li>Firebase configuration is invalid or expired.</li>
+            <li>Firestore database does not exist or has strict security rules.</li>
+            <li>Network connectivity issues.</li>
+          </ul>
+          <p className="mt-4 text-yellow-400">Check the browser console (F12) for detailed error logs.</p>
+        </div>
       </div>
     );
   }
