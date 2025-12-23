@@ -1,14 +1,9 @@
 import { useDispatch } from 'react-redux';
-import { toggleTodo, deleteTodo, type Todo } from '../store/todosSlice';
-import type { AppDispatch } from '../store/store';
+import { toggleTodo, deleteTodo } from '../store/todosSlice';
 import { Trash2, CheckCircle2, Circle } from 'lucide-react';
 
-interface TodoItemProps {
-  todo: Todo;
-}
-
-const TodoItem = ({ todo }: TodoItemProps) => {
-  const dispatch = useDispatch<AppDispatch>();
+const TodoItem = ({ todo }) => {
+  const dispatch = useDispatch();
 
   const handleToggle = () => {
     dispatch(toggleTodo(todo));

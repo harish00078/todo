@@ -1,23 +1,22 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '../store/todosSlice';
-import type { RootState } from '../store/store';
 import { ListTodo, CheckCircle, Circle } from 'lucide-react';
 
 const FilterButtons = () => {
   const dispatch = useDispatch();
-  const currentFilter = useSelector((state: RootState) => state.todos.filter);
-  const todos = useSelector((state: RootState) => state.todos.items);
+  const currentFilter = useSelector((state) => state.todos.filter);
+  const todos = useSelector((state) => state.todos.items);
 
   const filters = [
-    { value: 'all' as const, label: 'All', icon: ListTodo, count: todos.length },
+    { value: 'all', label: 'All', icon: ListTodo, count: todos.length },
     { 
-      value: 'active' as const, 
+      value: 'active', 
       label: 'Active', 
       icon: Circle, 
       count: todos.filter(t => !t.completed).length 
     },
     { 
-      value: 'completed' as const, 
+      value: 'completed', 
       label: 'Completed', 
       icon: CheckCircle, 
       count: todos.filter(t => t.completed).length 

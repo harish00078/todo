@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { 
   collection, 
   addDoc, 
@@ -12,21 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 
-export interface Todo {
-  id: string;
-  text: string;
-  completed: boolean;
-  createdAt: any;
-}
-
-interface TodosState {
-  items: Todo[];
-  filter: 'all' | 'active' | 'completed';
-  loading: boolean;
-  error: string | null;
-}
-
-const initialState: TodosState = {
+const initialState = {
   items: [],
   filter: 'all',
   loading: false,
@@ -37,16 +23,16 @@ const initialState: TodosState = {
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
   const q = query(collection(db, 'todos'), orderBy('createdAt', 'desc'));
   const querySnapshot = await getDocs(q);
-  const todos: Todo[] = [];
+  const todos = [];
   querySnapshot.forEach((doc) => {
-    todos.push({ id: doc.id, ...doc.data() } as Todo);
+    todos.push({ id: doc.id, ...doc.data() });
   });
   return todos;
 });
 
 export const addTodo = createAsyncThunk(
   'todos/addTodo',
-  async (text: string) => {
+  async (text) => {
     const docRef = await addDoc(collection(db, 'todos'), {
       text,
       completed: false,
@@ -63,7 +49,7 @@ export const addTodo = createAsyncThunk(
 
 export const toggleTodo = createAsyncThunk(
   'todos/toggleTodo',
-  async (todo: Todo) => {
+  async (todo) => {
     const todoRef = doc(db, 'todos', todo.id);
     await updateDoc(todoRef, {
       completed: !todo.completed,
@@ -74,7 +60,7 @@ export const toggleTodo = createAsyncThunk(
 
 export const deleteTodo = createAsyncThunk(
   'todos/deleteTodo',
-  async (id: string) => {
+  async (id) => {
     await deleteDoc(doc(db, 'todos', id));
     return id;
   }
@@ -84,7 +70,7 @@ const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    setFilter: (state, action: PayloadAction<'all' | 'active' | 'completed'>) => {
+    setFilter: (state, action) => {
       state.filter = action.payload;
     },
   },

@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTodos } from '../store/todosSlice';
-import type { RootState, AppDispatch } from '../store/store';
 import TodoItem from './TodoItem';
 import { Loader2, Inbox } from 'lucide-react';
 
 const TodoList = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const { items, filter, loading, error } = useSelector(
-    (state: RootState) => state.todos
+    (state) => state.todos
   );
 
   useEffect(() => {

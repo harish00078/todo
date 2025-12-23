@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addTodo } from '../store/todosSlice';
-import type { AppDispatch } from '../store/store';
 import { Plus } from 'lucide-react';
 
 const AddTodo = () => {
   const [text, setText] = useState('');
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (text.trim()) {
       await dispatch(addTodo(text.trim()));
