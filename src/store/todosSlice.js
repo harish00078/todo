@@ -8,7 +8,8 @@ import {
   getDocs,
   serverTimestamp,
   query,
-  orderBy
+  orderBy,
+  limit
 } from 'firebase/firestore';
 import { db } from '../firebase';
 
@@ -22,8 +23,12 @@ const initialState = {
 // Async thunks for Firebase operations
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
   try {
-    // Simplified query to avoid "Missing Index" errors on new collections
-    const q = query(collection(db, 'todos'));
+    // Query with server-side sorting and limit for scalability
+    const q = query(
+      collection(db, 'todos'),
+      orderBy('createdAt', 'desc'),
+      limit(50)
+    );
     const querySnapshot = await getDocs(q);
     const todos = [];
     querySnapshot.forEach((doc) => {
