@@ -31,9 +31,9 @@ function App() {
         <TodoList />
 
         {/* Footer */}
-        <footer className="text-center mt-12 text-white/40 text-sm animate-fade-in">
+        {/* <footer className="text-center mt-12 text-white/40 text-sm animate-fade-in">
           <p>Built with React, Redux Toolkit, Firebase & Tailwind CSS</p>
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

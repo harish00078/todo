@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTodos } from '../store/todosSlice';
 import TodoItem from './TodoItem';
 import { Loader2, Inbox } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const TodoList = () => {
   const dispatch = useDispatch();
@@ -61,11 +62,27 @@ const TodoList = () => {
   }
 
   return (
-    <div className="space-y-3">
-      {filteredTodos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} />
-      ))}
-    </div>
+    <motion.div className="space-y-3" layout>
+      <AnimatePresence mode="popLayout" initial={false}>
+        {filteredTodos.map((todo) => (
+          <motion.div
+            key={todo.id}
+            layout
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ 
+              opacity: 0, 
+              scale: 0.9, 
+              x: -100,
+              transition: { duration: 0.2 } 
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          >
+            <TodoItem todo={todo} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
