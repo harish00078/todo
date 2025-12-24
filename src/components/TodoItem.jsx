@@ -1,11 +1,21 @@
+import { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { toggleTodo, deleteTodo } from '../store/todosSlice';
-import { Trash2, CheckCircle2, Circle, Calendar } from 'lucide-react';
+import { toggleTodo, deleteTodo, updateTodo } from '../store/todosSlice';
+import { Trash2, CheckCircle2, Circle, Calendar, Pencil } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { triggerStars, triggerFire } from '../utils/effects';
 
 const TodoItem = ({ todo }) => {
   const dispatch = useDispatch();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(todo.text);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
 
   const getNormalizedCoordinates = (event) => {
     const rect = event.target.getBoundingClientRect();
@@ -15,7 +25,6 @@ const TodoItem = ({ todo }) => {
   };
 
   const handleToggle = async (e) => {
-    // Trigger stars if we are marking it as complete (currently incomplete)
     if (!todo.completed) {
       const { x, y } = getNormalizedCoordinates(e);
       triggerStars(x, y);
@@ -29,7 +38,6 @@ const TodoItem = ({ todo }) => {
   };
 
   const handleDelete = async (e) => {
-    // Trigger fire if deleting an incomplete task
     if (!todo.completed) {
       const { x, y } = getNormalizedCoordinates(e);
       triggerFire(x, y);
@@ -42,6 +50,29 @@ const TodoItem = ({ todo }) => {
     }
   };
 
+  const handleUpdate = async () => {
+    if (editText.trim() !== '' && editText !== todo.text) {
+      try {
+        await dispatch(updateTodo({ id: todo.id, text: editText })).unwrap();
+        setIsEditing(false);
+      } catch (err) {
+        console.error('Failed to update todo:', err);
+      }
+    } else {
+      setIsEditing(false);
+      setEditText(todo.text);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleUpdate();
+    } else if (e.key === 'Escape') {
+      setEditText(todo.text);
+      setIsEditing(false);
+    }
+  };
+
   const formattedDate = new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
@@ -51,7 +82,6 @@ const TodoItem = ({ todo }) => {
 
   return (
     <div className="todo-item group relative overflow-hidden">
-      {/* Background completion effect */}
       <motion.div
         initial={false}
         animate={{
@@ -90,29 +120,52 @@ const TodoItem = ({ todo }) => {
         </button>
 
         <div className="flex-1 flex flex-col gap-1">
-          <p
-            className={`text-lg transition-all duration-300 ${
-              todo.completed
-                ? 'line-through text-white/40'
-                : 'text-white'
-            }`}
-          >
-            {todo.text}
-          </p>
+          {isEditing ? (
+            <input
+              ref={inputRef}
+              type="text"
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              onBlur={handleUpdate}
+              onKeyDown={handleKeyDown}
+              className="text-lg bg-white/10 text-white rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-primary-400 w-full"
+            />
+          ) : (
+            <p
+              className={`text-lg transition-all duration-300 ${
+                todo.completed
+                  ? 'line-through text-white/40'
+                  : 'text-white'
+              }`}
+            >
+              {todo.text}
+            </p>
+          )}
           <div className="flex items-center gap-1.5 text-xs text-white/30">
             <Calendar size={12} />
             <span>{formattedDate}</span>
           </div>
         </div>
 
-        <button
-          onClick={handleDelete}
-          className="opacity-0 group-hover:opacity-100 transition-all duration-300 
-                     text-red-400 hover:text-red-300 hover:scale-110 flex-shrink-0"
-          aria-label="Delete todo"
-        >
-          <Trash2 size={20} />
-        </button>
+        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {!todo.completed && !isEditing && (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-blue-400 hover:text-blue-300 hover:scale-110 transition-all duration-300"
+              aria-label="Edit todo"
+            >
+              <Pencil size={20} />
+            </button>
+          )}
+          
+          <button
+            onClick={handleDelete}
+            className="text-red-400 hover:text-red-300 hover:scale-110 transition-all duration-300"
+            aria-label="Delete todo"
+          >
+            <Trash2 size={20} />
+          </button>
+        </div>
       </div>
     </div>
   );

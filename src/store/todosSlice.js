@@ -102,6 +102,21 @@ export const toggleTodo = createAsyncThunk(
   }
 );
 
+export const updateTodo = createAsyncThunk(
+  'todos/updateTodo',
+  async ({ id, text }) => {
+    try {
+      const todoRef = doc(db, 'todos', id);
+      await updateDoc(todoRef, { text });
+      console.log('Updated todo:', id);
+      return { id, text };
+    } catch (error) {
+      console.error('Error updating todo:', error);
+      throw error;
+    }
+  }
+);
+
 export const deleteTodo = createAsyncThunk(
   'todos/deleteTodo',
   async (id) => {
@@ -157,6 +172,13 @@ const todosSlice = createSlice({
         const todo = state.items.find((t) => t.id === action.payload.id);
         if (todo) {
           todo.completed = action.payload.completed;
+        }
+      })
+      // Update todo
+      .addCase(updateTodo.fulfilled, (state, action) => {
+        const todo = state.items.find((t) => t.id === action.payload.id);
+        if (todo) {
+          todo.text = action.payload.text;
         }
       })
       // Delete todo
