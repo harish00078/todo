@@ -64,7 +64,7 @@ User actions trigger specific physics-based visual feedback defined in `src/util
 ### Step-by-Step Setup
 1. **Clone the Repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/harish00078/todo
    cd todo-app
    ```
 2. **Install Dependencies**

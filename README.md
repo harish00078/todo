@@ -40,8 +40,8 @@
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/yourusername/todo-master.git
-    cd todo-master
+    git clone https://github.com/harish00078/todo
+    cd todo
     ```
 
 2.  **Install dependencies**
