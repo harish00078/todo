@@ -20,6 +20,13 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+// --- DEBUGGING LOGS ---
+console.log('--- Firebase Config Check ---');
+console.log('API Key:', firebaseConfig.apiKey ? 'Present' : 'MISSING');
+console.log('Project ID:', firebaseConfig.projectId ? 'Present' : 'MISSING');
+console.log('Auth Domain:', firebaseConfig.authDomain ? 'Present' : 'MISSING');
+// ----------------------
+
 let app;
 let db;
 
